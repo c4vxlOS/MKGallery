@@ -181,7 +181,9 @@ const displayItem = (item, id) => {
     <section onclick="this.classList.toggle('active');">
         <div class="content">
             <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
-            <img class="display" src="${item.url}" alt="${item.filename}">
+            ${ item.type == "video" ? `<video src="${item.url}" class="display" loop controls></video>`
+                : item.type == "image" ? `<img src="${item.url}" class="display" alt="${item.filename}">`
+                : "<p>Filetype not supported!</p>" }
             <p>${item.filename}</p>
         </div>
     </section>`;
