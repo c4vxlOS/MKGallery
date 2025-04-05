@@ -29,19 +29,25 @@ parser.add_argument("--extract", "-e", type=str, help="Download all the data of 
 parser.add_argument("--drop-source", "-ds", action="store_true", help="Prevents program from storing the source when encoding to b64,")
 parser.add_argument("--extract-out", "-eo", type=str, help="Set the output directory to download the media into. (Default = ./extracted)")
 parser.add_argument("--base64", "-b64", action="store_true", help="Converts all media to base 64 before making a gallery.")
+parser.add_argument("--preset", "-pr", type=str, help="Load a color theme (Choose between blue and green).")
 
 args = parser.parse_args()
 
 def default(x, y):
     return x if x is not None else y
 
+preset = {
+        "blue": { "bg": "#1b1b1b", "color": "#ffffff", "primary": "#2e3e4d", "secondary": "#687e92", "font": "system-ui", "max-width": "50ch" },
+        "green": { "bg": "#18121c", "color": "#ffffff", "primary": "#39534c", "secondary": "#436f42", "font": "system-ui", "max-width": "50ch" },
+    }[default(args.preset, "blue")]
+
 title = default(args.title, "Gallery")
-background = default(args.background, "#1b1b1b")
-color = default(args.color, "#ffffff")
-primary = default(args.primary, "#2e3e4d")
-secondary = default(args.secondary, "#687e92")
-font = default(args.font, "system-ui")
-maxwidth = default(args.maxwidth, "50ch")
+background = default(args.background, preset["bg"])
+color = default(args.color, preset["color"])
+primary = default(args.primary, preset["primary"])
+secondary = default(args.secondary, preset["secondary"])
+font = default(args.font, preset["font"])
+maxwidth = default(args.maxwidth, preset["max-width"])
 out = default(args.out, "./out.html")
 extract_out = default(args.extract_out, "./extracted")
 
