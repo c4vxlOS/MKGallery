@@ -56,6 +56,12 @@ const showNotification = async (title, content, color = "red", time=8000) => {
     element.querySelector(".progress").animate([ { width: '100%', opacity: 1 }, { width: '0%', opacity: 0 } ], { duration: time, fill: 'forwards' } ).onfinish = () => element.remove();
 }
 
+const copy = (text) => {
+    navigator.clipboard.writeText(text)
+        .then(() => showNotification('Success', 'Successfully copied source.', 'green'))
+        .catch((e) => showNotification('Error', 'Something went wrong.'))
+}
+
 const download = (content, filename) => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([content], { type: "text/plain" }));

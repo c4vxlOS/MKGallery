@@ -30,6 +30,8 @@
         </div>
     </div>
 
+    <br><br><br>
+
     <div class="filter__panel" id="filter__panel">
         <div class="row">
             <label>Filter type:</label>
@@ -77,6 +79,7 @@
             <div class="rounded__container" style="max-width: 90ch;">
                 <button class="primary" onclick="window.open(current.url, '_blank').focus()">View source</button>
                 <button class="primary" onclick="window.open(current.origin, '_blank').focus()">View origin</button>
+                <button class="primary" onclick="copy(current.url)">Copy source</button>
                 <button class="primary" onclick="downloadURL(current.url, current.filename)">Download</button>
                 <button class="primary" onclick="items = items.filter(x => x != current); this.parentNode.parentNode.parentNode.click(); reload(); warnUnsavedChanges()">Delete</button>
             </div>
