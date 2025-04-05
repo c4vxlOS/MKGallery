@@ -97,7 +97,7 @@ let categories;
 const loadItemsMetadata = () => {
     items = items.map(item => {
         item = typeof item === "string" ? { "url": item } : item;
-        let filename = item.url.split("/").reverse()[0].split("?")[0].split("#")[0];
+        let filename = item.url.split("/").reverse()[0].split("?")[0].split("#")[0].split(";")[0];
         let filetype = item.url.startsWith("data:") ? item.url.split(";")[0].split("/")[1] : filename.split(".").reverse()[0];
         let type = [ "mp4", "avi", "mkv", "mov", "flv", "webm", "wmv" ].includes(filetype) ? "video" : 
                    [ "png", "jpg", "jpeg", "gif", "webp" ].includes(filetype) ? "image" : "unknown";
@@ -106,7 +106,8 @@ const loadItemsMetadata = () => {
 }
 
 const createCategory = (name) => {
-    categories.push(name);
+    categories.push(name.toLowerCase());
+    current.categories.push(name.toLowerCase());
     loadCategories();
     warnUnsavedChanges();
 }
@@ -151,13 +152,12 @@ const loadCategories = () => {
                 element.classList.toggle("active");
             }
     
-            let aFilters = [...element.parentNode.querySelectorAll("span.active")].map(x => x.innerHTML.toLowerCase());
+            let aFilters = [...element.parentNode.querySelectorAll("span.active")].map(x => x.innerHTML.toLowerCase()).filter(x => x != "+");
             if (element.parentNode.parentNode.parentNode.id == "filter__panel") {
                 filters = aFilters;
                 if (filters.length == 0) allButton?.click();
             } else {
                 current.categories = aFilters;
-                loadCategories();
             }
     
             reload();
@@ -193,8 +193,7 @@ const displayItem = (item, id) => {
             <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
             ${ item.type == "video" ? `<video src="${item.url}" class="display" loop controls></video>`
                 : item.type == "image" ? `<img src="${item.url}" class="display" alt="${item.filename}">`
-                : "<p>Filetype not supported!</p>" }
-            <p>${item.filename}</p>
+                : "<br><span>Filetype not supported!</span><br>" }<p>${item.filename}</p>
         </div>
     </section>`;
 }

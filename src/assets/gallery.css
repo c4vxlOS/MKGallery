@@ -28,6 +28,7 @@
     overflow: hidden;
     cursor: pointer;
     gap: 2px;
+    background: var(--bg-2);
 }
 .gallery__items section.active .content {
     width: auto;
