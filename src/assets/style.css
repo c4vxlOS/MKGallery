@@ -61,6 +61,7 @@ h1 { font-weight: 100; }
 }
 
 .options__bar .segment {
+    width: 5ch;
     height: 5ch;
     background: var(--bg-2);
     padding: 8px;
