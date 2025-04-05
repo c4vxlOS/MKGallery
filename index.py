@@ -75,9 +75,9 @@ def download_file(url: str, path: str):
 
 def extract_data(file):
     text = open(file, "r").read()
-    found = re.search(r"let urls = \[(.*?)\];", text, re.DOTALL)
+    found = re.search(r"let items = \[(.*?)\];", text, re.DOTALL)
     if found:
-        found = found.group().removeprefix("let urls = ").removesuffix(";")
+        found = found.group().removeprefix("let items = ").removesuffix(";")
         return eval(found)
     else:
         print("Error. Not a valid gallery.")
