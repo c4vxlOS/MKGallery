@@ -184,7 +184,7 @@ const packageB64 = async () => {
 
 const displayItem = (item, id) => {
     document.querySelector(".gallery__items").innerHTML += `
-    <section onclick="this.classList.toggle('active');">
+    <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()">
         <div class="content">
             <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
             ${ item.type == "video" ? `<video src="${item.url}" class="display" loop controls></video>`
