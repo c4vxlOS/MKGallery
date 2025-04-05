@@ -119,6 +119,10 @@ if __name__ == "__main__":
                     path = "/".join(f"{dp}/{fn}".split("/")[1:])
                     urls.append({ "url": path, "categories": path.split("/")[:-1] })
         
+        # Get from url file
+        elif args.urls_file:
+            urls = [ line.strip() for line in open(args.urls_file, "r").readlines() ]
+
         # Get urls from stdinput
         elif len(urls) == 0:
             urls = [ line.strip() for line in sys.stdin if line.strip() ]
