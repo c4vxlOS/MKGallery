@@ -151,9 +151,13 @@ const loadCategories = () => {
                 element.classList.toggle("active");
             }
     
+            let aFilters = [...element.parentNode.querySelectorAll("span.active")].map(x => x.innerHTML.toLowerCase());
             if (element.parentNode.parentNode.parentNode.id == "filter__panel") {
-                filters = [...element.parentNode.querySelectorAll("span.active")].map(x => x.innerHTML.toLowerCase());
+                filters = aFilters;
                 if (filters.length == 0) allButton?.click();
+            } else {
+                current.categories = aFilters;
+                loadCategories();
             }
     
             reload();
@@ -184,7 +188,7 @@ const packageB64 = async () => {
 
 const displayItem = (item, id) => {
     document.querySelector(".gallery__items").innerHTML += `
-    <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()">
+    <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()" id="${id}">
         <div class="content">
             <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
             ${ item.type == "video" ? `<video src="${item.url}" class="display" loop controls></video>`
@@ -195,7 +199,7 @@ const displayItem = (item, id) => {
     </section>`;
 }
 
-const reload = () => {
+const reload = async () => {
     document.querySelector(".gallery__items").innerHTML = "";
     categories = [...new Set(items.flatMap(x => x.categories))];
     loadItemsMetadata();
