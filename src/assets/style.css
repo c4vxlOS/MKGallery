@@ -1,0 +1,121 @@
+/**
+ * Global
+*/
+:root {
+    --primary: #4e7c54;
+    --secondary: #66b65f;
+    --text: #eceaea;
+    --bg: #353333;
+    --bg-1: hsl(from var(--bg) h s 15%);
+    --bg-2: hsl(from var(--bg) h s 10%);
+    --font: system-ui;
+    --max-width: 50ch;
+}
+
+::-webkit-scrollbar { height: 2px; width: 2px; }
+::-webkit-scrollbar-thumb { background: var(--bg-1); }
+
+body, html {
+    width: 100vw;
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+* { transition: .2s; font-family: var(--font); box-sizing: border-box; user-select: none; }
+
+label, p, h1, span, textarea::placeholder {
+    color: var(--text);
+}
+h1 { font-weight: 100; }
+
+
+.row, .flow-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+.flow-right {
+    width: max-content;
+    flex-direction: column;
+    align-items: end;
+}
+
+
+/**
+ * Title bar
+*/
+.options__bar {
+    width: max-content;
+    gap: 10px;
+    position: fixed;
+    padding-right: 10px;
+    top: 10px;
+    right: 10px;
+}
+
+.options__bar .segment {
+    height: 5ch;
+    background: var(--bg-2);
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.options__bar .segment span { white-space: nowrap; }
+.options__bar .segment svg { height: 100%; width: 100%; stroke: var(--text); }
+.options__bar:hover .segment:not(:hover) { background: var(--bg-1); }
+
+
+.filters__list {
+    display: flex;
+    gap: 15px;
+    max-width: 100%;
+    overflow-y: scroll;
+    padding-bottom: 5px;
+}
+.filters__list span {
+    background: var(--primary);
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text);
+}
+.filters__list span.active { background: var(--secondary); }
+
+#export__modal .modal__content {
+    border-radius: 10px;
+    overflow: hidden;
+    gap: 1px;
+}
+#export__modal .modal__content button {
+    width: 100%;
+    border-radius: 0;
+}
+
+
+.filter__panel {
+    max-width: 90ch;
+    border: 1px solid var(--text);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.rounded__container {
+    overflow: hidden;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.rounded__container * {
+    width: 100%;
+    border-radius: 0;
+}

@@ -1,0 +1,32 @@
+.notifications {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 30ch;
+    z-index: 999999;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
+}
+.notifications section {
+    position: relative;
+    background-color: var(--bg-1);
+    max-width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    padding-bottom: 25px;
+}
+.notifications section p {
+    font-size: 130%;
+    margin: 3px 0;
+}
+.notifications section .progress {
+    position: absolute;
+    content: "";
+    bottom: 0px;
+    left: 0;
+    height: 4px;
+    width: 100%;
+}
