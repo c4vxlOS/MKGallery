@@ -138,11 +138,11 @@ const loadCategories = () => {
     );
 
     document.querySelectorAll(".filters__list span").forEach(element => {
-        element.addEventListener("click", () => {
-            let filter = element.innerHTML.toLowerCase();
-            let all = [...element.parentNode.querySelectorAll("span")];
-            let allButton = all.find(x => x.innerHTML.toLowerCase() == "all");
-    
+        let filter = element.innerHTML.toLowerCase();
+        let all = [...element.parentNode.querySelectorAll("span")];
+        let allButton = all.find(x => x.innerHTML.toLowerCase() == "all");
+
+        element.addEventListener("click", () => {    
             if (filter == "all") {
                 all.forEach(x => x.classList.remove("active"));
                 element.classList.add("active");

@@ -35,7 +35,7 @@
     max-height: 90vh;
 }
 .gallery__items section.active .content .display {
-    max-height: calc(90vh - 4ch);
+    max-height: calc(90vh - 6ch);
 }
 .gallery__items section button {
     width: 100%;
