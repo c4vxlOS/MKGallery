@@ -43,6 +43,7 @@ def interprete(content):
 
     print("  | Compressing src")
     content = re.sub(r" //.*", "", content)
+    content = re.sub(r"/\*\*([\s\S]*?)\*/", "", content)
     content = content.replace("\\n", "\\\\n")
     content = re.sub(r"^\s+", "", content, flags=re.MULTILINE)
     content = re.sub(r">\s+<", "><", content)
@@ -58,7 +59,11 @@ def interprete(content):
     content = re.sub(r"--font: .*?;", "--font: {font};", content)
     content = re.sub(r"--max-width: .*?;", "--max-width: {max_width};", content)
     content = re.sub(r"--font: .*?;", "--font: {font};", content)
-    content = re.sub(r"let items = .*?;", "let items = {urls};", content, 1)
+    content = re.sub(r"let items = .*?;", "let items = {items};", content, 1)
+    content = re.sub(r'\\s', r'\\\\s', content)
+    content = re.sub(r'\\/', r'\\\\/', content)
+    content = re.sub(r'\\\[', r'\\\\/', content)
+    content = re.sub(r'\\\]', r'\\\\]', content)
     print()
     return content
 
