@@ -43,8 +43,9 @@
     border-radius: unset;
 }
 .gallery__items section .content .display {
-    width: 100%;
-    height: 100%;    
+    width: auto;
+    max-width: 100%;
+    height: 100%;
     user-select: none;
     -webkit-user-drag: none;
 }
