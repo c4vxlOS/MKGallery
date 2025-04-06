@@ -81,7 +81,7 @@ const downloadURL = (url, filename) => {
 const downloadMedia = async () => {
     items.forEach((item, i) => 
         setTimeout(async () =>
-            downloadURL(`[${item.categories[0]}] ${item.filename}`),
+            downloadURL(item.url, `[${item.categories[0]}] ${item.filename}`),
             i * 500
         )
     )
