@@ -71,11 +71,14 @@ const download = (content, filename) => {
     document.body.removeChild(a);
 };
 
+let corsProxy = "https://corsproxy.io/?";
 const downloadURL = (url, filename) => {
     fetch(url)
         .then(response => response.blob())
         .then(response => download(response, filename))
-        .catch(e => showNotification("Error", "Error while downloading. (CORS)"));
+        .catch(e => 
+            !url.startsWith(corsProxy) ? downloadURL(corsProxy + url, filename) : showNotification("Error", `Error while downloading: ${e}`)
+        );
 }
 
 const downloadMedia = async () => {
