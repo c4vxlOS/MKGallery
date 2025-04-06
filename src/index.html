@@ -62,6 +62,7 @@
             <button class="primary" onclick="download(items.map(x => `[${x.categories.join(';')}] ${x.url}`).join('\n'), 'sources.txt')">Export sources</button>
             <button class="primary" onclick="download(items.map(x => `[${x.categories.join(';')}] ${x.origin}`).join('\n'), 'origins.txt')">Export origins</button>
             <button class="primary" onclick="let itemB = [...items]; items = []; exportPage('New Gallery'); items = itemB;">Export new empty gallery</button>
+            <button class="primary" onclick="exportPage()">Download this gallery</button>
         </div>
     </div>
 
