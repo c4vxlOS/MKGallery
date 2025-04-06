@@ -103,6 +103,7 @@ const loadItemsMetadata = () => {
                    [ "png", "jpg", "jpeg", "gif", "webp" ].includes(filetype) ? "image" : "unknown";
         return { "url": item.url, "origin": item.origin || item.url, "filename": item.filename || filename, "filetype": item.filetype || filetype, "categories": item.categories || [ type ], "type": type }
     });
+    items = items.map(item => { item.id = items.indexOf(item); return item; });
 }
 
 const createCategory = (name) => {
@@ -186,11 +187,11 @@ const packageB64 = async () => {
     });
 };
 
-const displayItem = (item, id) => {
+const displayItem = (item) => {
     document.querySelector(".gallery__items").insertAdjacentHTML("beforeend", `
-    <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()" id="${id}">
+    <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()" id="${item.id}">
         <div class="content">
-            <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
+            <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${item.id}')">Options</button>
             ${ item.type == "video" ? `<video src="${item.url}" class="display" loop controls></video>`
                 : item.type == "image" ? `<img src="${item.url}" class="display" alt="${item.filename}">`
                 : "<br><span>Filetype not supported!</span><br>" }<p>${item.filename}</p>
@@ -209,7 +210,7 @@ const reload = async () => {
         (filterType == 0 ? !filters.map(c => item.categories.includes(c)).includes(false)
         : filterType == 1 ? item.categories.some(c => filters.includes(c)) : false));
     validItems.forEach((item, i) => {
-        timeouts.push(setTimeout(() => displayItem(item, i), i * 100));
+        timeouts.push(setTimeout(() => displayItem(item), i * 100));
     });
 
     if (validItems.length == 0) {
