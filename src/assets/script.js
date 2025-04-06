@@ -57,9 +57,9 @@ const showNotification = async (title, content, color = "red", time=8000) => {
 }
 
 const copy = (text) => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard?.writeText(text)
         .then(() => showNotification('Success', 'Successfully copied source.', 'green'))
-        .catch((e) => showNotification('Error', 'Something went wrong.'))
+        .catch((e) => showNotification('Error', 'Something went wrong.')) || showNotification("Error", "Clipboard api not working on HTTP!")
 }
 
 const download = (content, filename) => {
