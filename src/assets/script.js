@@ -31,12 +31,25 @@ const warnUnsavedChanges = () => {
         `, "#1b9a9e", 999999999999);
 }
 
+let corsProxy = "https://corsproxy.io/?";
+const getURLData = async (url) => {
+    try {
+        return (await fetch(url));
+    } catch {
+        if (url.startsWith(corsProxy)) {
+            showNotification("Error", `Error while downloading: ${e}`);
+            return null;
+        }
+        return getURLData(corsProxy + url);
+    }
+}
+
 const asBase64 = async (url) => {
     if (/^data:[a-zA-Z]+\/[a-zA-Z0-9.-]+;base64,/.test(url)) 
         return url;
     console.log(`Converting ${url}`);
     try {
-        let response = await fetch(url);
+        let response = await getURLData(url);
         return `data:${response.headers.get("content-type")};base64,` + 
             btoa(new Uint8Array(await response.arrayBuffer()).reduce(function (data, byte) {
                 return data + String.fromCharCode(byte);
@@ -71,14 +84,8 @@ const download = (content, filename) => {
     document.body.removeChild(a);
 };
 
-let corsProxy = "https://corsproxy.io/?";
 const downloadURL = (url, filename) => {
-    fetch(url)
-        .then(response => response.blob())
-        .then(response => download(response, filename))
-        .catch(e => 
-            !url.startsWith(corsProxy) ? downloadURL(corsProxy + url, filename) : showNotification("Error", `Error while downloading: ${e}`)
-        );
+    getURLData(url).then(x => x.blob()).then(x => download(x, filename));
 }
 
 const downloadMedia = async () => {
