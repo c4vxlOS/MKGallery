@@ -116,7 +116,7 @@ const exportPage = (title = document.title) => {
     let newItems = items.map(item => 
         item.origin == item.url ? { "url": item.url, "categories": item.categories } :
         { "url": item.url, "origin": item.origin, "filename": item.filename, "categories": item.categories });
-    let source = template.replace(/let\s+items\s*=\s*\[(.*?)\]/gs, (match, p1) => `let items = ${JSON.stringify(newItems)};`);
+    let source = template.replace(/let items = \[\s*(\{[^{}]*\}\s*,\s*)*(\{[^{}]*\})?\s*\]/, (match, p1) => `let items = ${JSON.stringify(newItems)};`);
     source = source.replace(`<title>${document.title}</title>`, `<title>${title}</title>`);
     download(source, `${title}.html`);
 };

@@ -61,9 +61,12 @@ def interprete(content):
     content = re.sub(r"--font: .*?;", "--font: {font};", content)
     content = re.sub(r"let items = .*?;", "let items = {items};", content, 1)
     content = re.sub(r'\\s', r'\\\\s', content)
+    content = re.sub(r'\\S', r'\\\\S', content)
     content = re.sub(r'\\/', r'\\\\/', content)
-    content = re.sub(r'\\\[', r'\\\\/', content)
+    content = re.sub(r'\\\[', r'\\\\[', content)
     content = re.sub(r'\\\]', r'\\\\]', content)
+    content = re.sub(r'\\\{', r'\\\\{', content)
+    content = re.sub(r'\\\}', r'\\\\}', content)
     print()
     return content
 
