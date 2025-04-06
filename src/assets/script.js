@@ -187,7 +187,7 @@ const packageB64 = async () => {
 };
 
 const displayItem = (item, id) => {
-    document.querySelector(".gallery__items").innerHTML += `
+    document.querySelector(".gallery__items").insertAdjacentHTML("beforeend", `
     <section onclick="this.classList.toggle('active');" oncontextmenu="event.preventDefault(); this.querySelector('button').click()" id="${id}">
         <div class="content">
             <button class="primary" onclick="this.parentNode.parentNode.click(); openItemOptions('${id}')">Options</button>
@@ -195,7 +195,7 @@ const displayItem = (item, id) => {
                 : item.type == "image" ? `<img src="${item.url}" class="display" alt="${item.filename}">`
                 : "<br><span>Filetype not supported!</span><br>" }<p>${item.filename}</p>
         </div>
-    </section>`;
+    </section>`);
 }
 
 let timeouts = [];
@@ -209,7 +209,7 @@ const reload = async () => {
         (filterType == 0 ? !filters.map(c => item.categories.includes(c)).includes(false)
         : filterType == 1 ? item.categories.some(c => filters.includes(c)) : false));
     validItems.forEach((item, i) => {
-        timeouts.push(setTimeout(() => displayItem(item), i * 100));
+        timeouts.push(setTimeout(() => displayItem(item, i), i * 100));
     });
 
     if (validItems.length == 0) {
