@@ -198,14 +198,19 @@ const displayItem = (item, id) => {
     </section>`;
 }
 
+let timeouts = [];
 const reload = async () => {
+    timeouts.forEach(clearTimeout);
+    timeouts = [];
     document.querySelector(".gallery__items").innerHTML = "";
     categories = [...new Set(items.flatMap(x => x.categories))];
     loadItemsMetadata();
     let validItems = items.filter(item => filters.includes("all") ||
         (filterType == 0 ? !filters.map(c => item.categories.includes(c)).includes(false)
         : filterType == 1 ? item.categories.some(c => filters.includes(c)) : false));
-    validItems.forEach(displayItem);
+    validItems.forEach((item, i) => {
+        timeouts.push(setTimeout(() => displayItem(item), i * 100));
+    });
 
     if (validItems.length == 0) {
         document.querySelector(".gallery__items").innerHTML = "<p>No items found. <b>Check your filters!</b></p>";

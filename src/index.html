@@ -57,7 +57,7 @@
 
     <div class="modal" id="export__modal">
         <div class="modal__content">
-            <button class="primary" onclick="(async () => { packageB64(); exportPage(); })()">Export as offline mode</button>
+            <button class="primary" onclick="(async () => { await packageB64(); exportPage(); })()">Export as offline mode</button>
             <button class="primary" onclick="downloadMedia()">Export media</button>
             <button class="primary" onclick="download(items.map(x => `[${x.categories.join(';')}] ${x.url}`).join('\n'), 'sources.txt')">Export sources</button>
             <button class="primary" onclick="download(items.map(x => `[${x.categories.join(';')}] ${x.origin}`).join('\n'), 'origins.txt')">Export origins</button>
