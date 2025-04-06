@@ -64,6 +64,15 @@ def export_media(data, dest):
         except:
             return
 
+def end(urls, args):
+    source = generate_html(urls, **settings)
+
+    if not args.no_stdout:
+        print(source)
+
+    if args.output:
+        open(args.output.removesuffix(".html") + ".html", "w").write(source)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MKGallery is a utility application for creating galleries out of files.")
     parser.add_argument("--max-width", "-mw", type=str, help="Set the maximal width of an item in the gallery. (Default: 50ch)")
@@ -83,6 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--export-out", "-eo", type=str, help="Set the destination directory, where to export media to (Default: ./extracted).")
     parser.add_argument("--dir", "-d", type=str, help="Create a gallery out of the items in a folder. (Use sub-dirs to add categories)")
     parser.add_argument("--base64", "-b64", action="store_true", help="Store all items in base64 format, for offline access.")
+    parser.add_argument("--base-only", "-bo", action="store_true", help="Export a gallery with no items.")
     parser.add_argument("--no-origin", "-nor", action="store_true", help="When used in combination with '--base64', only the b64 will be stored (not the origins).")
     parser.add_argument("--no-stdout", "-no", action="store_true", help="When specified, the generated source won't be printed out.")
     args = parser.parse_args()
@@ -109,6 +119,9 @@ if __name__ == "__main__":
     
     elif args.export_media:
         export_media(extract_data(args.export_media), default(args.export_out, "./extracted"))
+
+    elif args.base_only:
+        end([], args)
 
     else:
         # Get passed urls
@@ -140,10 +153,5 @@ if __name__ == "__main__":
                 if not args.no_origin:
                     url["origin"] = url["url"]
                 url["url"] = default(as_base64(url["url"]), url["url"])
-        source = generate_html(urls, **settings)
-
-        if not args.no_stdout:
-            print(source)
-
-        if args.output:
-            open(args.output.removesuffix(".html") + ".html", "w").write(source)
+        
+        end(urls, args)
