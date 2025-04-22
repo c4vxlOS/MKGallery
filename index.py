@@ -23,7 +23,22 @@ def parse_urls(urls: list[str]) -> list[dict]:
 
 def extract_data(file):
     found = re.search(r"let items = \[(.*?)\];", open(file, "r").read(), re.DOTALL)
-    if found: return eval(found.group().removeprefix("let items = ").removesuffix(";"))
+    if found:
+        data = eval(found.group().removeprefix("let items = ").removesuffix(";"))
+        for i, d in enumerate(data):
+            if type(d) is dict:
+                if "categories" in d.keys():
+                    continue
+                d = d["url"]
+            
+            t = mimetypes.guess_type(d)[0]
+            if t.startswith("video/"):
+                t = "video"
+            elif t.startswith("image/"):
+                t = "image"
+            else: t = "unknown"
+            data[i] = { "url": d, "categories": [ t ] }
+        return data
     else: sys.exit("Error. Not a valid gallery.")
 
 def get_item_content(path):
