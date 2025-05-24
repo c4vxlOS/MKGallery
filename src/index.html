@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+
+    <link rel="stylesheet" href="assets/styles/global.css">
+    <link rel="stylesheet" href="assets/styles/navbar.css">
+    <link rel="stylesheet" href="assets/styles/gallery.css">
+    <link rel="stylesheet" href="assets/styles/notifications.css">
+</head>
+<body class="col">
+    <div class="notification__container col center" id="notification__container"></div>
+
+    <div class="options__bar row" id="options__bar">
+        <div class="segment row tooltip" onclick="open_modal('.gallery__add__items__modal')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.19999 4.99999H4.99999M4.99999 4.99999H3.79999M4.99999 4.99999V3.79999M4.99999 4.99999V6.19999" stroke-width="0.4" stroke-linecap="round"/><path d="M9 5C9 6.8856 9 7.82844 8.4142 8.4142C7.82844 9 6.8856 9 5 9C3.11438 9 2.17157 9 1.58579 8.4142C1 7.82844 1 6.8856 1 5C1 3.11438 1 2.17157 1.58579 1.58579C2.17157 1 3.11438 1 5 1C6.8856 1 7.82844 1 8.4142 1.58579C8.80372 1.97528 8.93424 2.52262 8.97796 3.4" stroke-width="0.4" stroke-linecap="round"/></svg>
+            <span>Add media</span>
+        </div>
+
+        <div class="segment row tooltip" tooltip-pos="right" onclick="open_modal('.gallery__export__modal')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.40002 4.60005L8.68002 1.32007" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.99995 2.92V1H7.07996" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.59999 1H3.8C1.8 1 1 1.8 1 3.8V6.2C1 8.2 1.8 9 3.8 9H6.19999C8.19999 9 8.99999 8.2 8.99999 6.2V5.4" stroke-width="0.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Export media</span>
+        </div>
+    </div>
+
+    <div class="primary" style="max-width: min(80ch, 96%);">
+        <div class="row center gap">
+            <p>Filter type:</p>
+            
+            <div class="switch">
+                <span onclick="filterType = 0; reload()" class="active">Match all</span>
+                <span onclick="filterType = 1; reload()">Match one</span>
+            </div>
+        </div>
+    
+        <div class="category__list filter__list">
+            <p>Filters:</p>
+            <div class="categories__content">
+                <!--JS will generate here-->  
+            </div>
+        </div>
+    </div>
+
+    <div class="gallery__items row wrap center">
+        <!--JS will add items here-->
+    </div>
+
+    <div class="modal col center gallery__item__options__modal">
+        <div class="modal__content col center primary" style="width: 100%;">
+            <p></p>
+
+            <div class="category__list">
+                <div class="categories__content">
+                    <!--JS will generate here-->
+                    <!--<span class="primary">category <span>X</span></span>-->
+                </div>
+        
+                <button class="primary" style="width: 4ch; height: 4ch; padding: 0;" onclick="open_modal('.gallery__add__category__modal')">+</button>
+            </div>
+
+            <div class="button__panel col">
+                <button class="primary" onclick="window.open(current.src, '_blank')">View source</button>
+                <button class="primary" onclick="window.open(current.origin, '_blank')">View origin</button>
+                <button class="primary" onclick="copy(current.src)">Copy source</button>
+                <button class="primary" onclick="items = items.filter(item => item != current); reload()" data-modal-close>Delete</button>
+                <button class="primary" onclick="download_url(current.src, current.name)">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal col center gallery__add__category__modal">
+        <div class="modal__content col center primary">
+            <p>Create Category</p>
+            <div class="input__bar row">
+                <input type="text" class="primary">
+                <button class="primary" data-modal-close onclick="add_category_to_current(this.parentNode.querySelector('input'))">Add</button>
+            </div>
+            <br>
+            <button class="primary" data-modal-close>Close</button>
+        </div>
+    </div>
+
+    <div class="modal col center gallery__add__items__modal">
+        <div class="modal__content col center primary" style="width: 100%;">
+            <p>Add media</p>
+            <textarea class="primary" placeholder="[Category1;Category2] url"></textarea>
+
+            <br>
+            <div class="button__panel col">
+                <button class="primary" onclick="add_items(this.parentNode.parentNode.querySelector('textarea').value)" data-modal-close>Add</button>
+                <button class="primary" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal col center gallery__export__modal">
+        <div class="modal__content col center primary" style="width: 100%;">
+            <p>Export</p>
+            
+            <div class="button__panel col">
+                <button class="primary" onclick="pb64(); export_page()" data-modal-close>Export as offline mode</button>
+                <button class="primary" onclick="export_all_media()" data-modal-close>Export media</button>
+                <button class="primary" onclick="download(items_to_enc(), 'sources.txt')" data-modal-close>Export sources</button>
+                <button class="primary" onclick="download(items_to_enc(false), 'origins.txt')" data-modal-close>Export origins</button>
+                <button class="primary" onclick="let cu = [...items]; items = []; export_page('empty'); items = cu;" data-modal-close>Export empty gallery</button>
+                <button class="primary" onclick="export_page()" data-modal-close>Download gallery</button>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="assets/scripts/script.js"></script>
+    <script defer src="assets/scripts/elements.js"></script>
+    <script defer src="assets/scripts/utils.js"></script>
+</body>
+</html>
