@@ -33,21 +33,40 @@ def _prepare_gallery(id, **args):
     src = re.sub(r"const warn_unsaved = \(\) => \{.*?\}", """const warn_unsaved = async () => { 
         let gn = location.pathname.split("/").reverse()[0];
         
-        if (items.length == 0) fetch(`update/${gn}/?action=removeall`);
-        else {
-            __items_clone.forEach((item, id) => {
-                let match = items.find(x => x.src == item.src);
-                if (!match) fetch(`update/${gn}/?action=remove&id=${id}`);
-                if (match?.categories?.length != item.categories.length || match?.categories?.some((v, i) => v !== item.categories[i]) == true)
-                     fetch(`update/${gn}/?id=${id}&action=set_categories&categories=${JSON.stringify(match.categories)}`);
-            });
-
-            items.forEach((item, id) => {
-                let match = __items_clone.find(x => x.src == item.src);
-                if (!match) fetch(`update/${gn}/?action=add&src=${item.src}&categories=${JSON.stringify(item.categories)}`);
-            });
-        }
-        __items_clone = items;
+        let added = [];
+        let removed = [];
+        let categoriesChanged = [];
+             
+        [...__items_clone].forEach((item, id) => {
+            let match = items.find(x => x.src == item.src);
+            if (!match) {
+                removed.push(item.id);
+                __items_clone = __items_clone.filter(x => x.id != item.id);
+            }
+            else if (match.categories.length !== item.categories.length || match.categories.some((v, i) => v !== item.categories[i])) {
+                categoriesChanged.push([ id, match.categories ]);
+                item.categories = match.categories;
+            }
+        });
+                 
+        [...items].forEach((item, id) => {
+            let match = __items_clone.find(x => x.src == item.src);
+            if (!match) {
+                added.push(item.src);
+                __items_clone.splice(id, 0, item);
+            }
+        });
+                 
+        console.log(added)
+                 console.log(removed)
+                 console.log(categoriesChanged)
+                 
+        let data = new FormData();
+        data.append("added", JSON.stringify(added));
+        data.append("removed", JSON.stringify(removed));
+        data.append("categoriesChanged", JSON.stringify(categoriesChanged));
+        fetch(`update/${gn}`, { method: "POST", body: data });
+        reload();
     }""", src)
 
     return src
@@ -65,32 +84,31 @@ def create_flask_server():
     
     lock = threading.Lock()
 
-    @app.route("/update/<id>/", methods=["GET"])
+    @app.route("/update/<id>/", methods=["POST"])
     def _update(id):
-        action = request.args.get("action")
-        if not action:
-            return jsonify({"success": False})
+        def get(name):
+            r = request.form.get(name)
+            return json.loads(r) if r else []
+        
+        try:
+            added = get("added")
+            removed = get("removed")
+            categoriesChanged = get("categoriesChanged")
 
-        with lock:
-            data = get_items(id)
+            with lock:
+                data = get_items(id)
 
-            if action == "add":
-                data.append({"src": request.args.get("src"), "categories": json.loads(request.args.get("categories"))})
-            elif action == "removeall":
-                data = []
-            else:
-                obj = int(request.args.get("id", -1))
-                if obj == -1:
-                    return jsonify({"success": False})
+                data += [ { "src": a } for a in added ]
 
-                if action == "remove":
-                    data.pop(obj)
-                elif action == "set_categories":
-                    data[obj]["categories"] = json.loads(request.args.get("categories"))
+                data = [ d for i, d in enumerate(data) if i not in removed ]
 
-            set_items(id, data)
+                for c in categoriesChanged:
+                        data[c[0]]["categories"] = c[1]
 
-        return jsonify({"success": True})
+                set_items(id, data)
+            return jsonify({ "success": True })
+        except:
+            return jsonify({ "success": False })
 
     return app
 
