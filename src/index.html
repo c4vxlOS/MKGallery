@@ -64,7 +64,7 @@
                 <button class="primary" onclick="window.open(current.src, '_blank')">View source</button>
                 <button class="primary" onclick="window.open(current.origin, '_blank')">View origin</button>
                 <button class="primary" onclick="copy(current.src)">Copy source</button>
-                <button class="primary" onclick="items = items.filter(item => item != current); reload()" data-modal-close>Delete</button>
+                <button class="primary" onclick="items = items.filter(item => item != current); reload(); warn_unsaved();" data-modal-close>Delete</button>
                 <button class="primary" onclick="download_url(current.src, current.name)">Download</button>
             </div>
         </div>
