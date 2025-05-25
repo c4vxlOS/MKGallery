@@ -45,7 +45,7 @@ def parse_variable(src, key, name = None, n = 1):
     
     return re.sub(rf"({re.escape(key)}\s*[:=]\s*)([^;]*)(;?)", rf"\1{name}\3", src, count=n)
 
-def build_template(content: str) -> str:
+def build_template(content: str, skip_vars: bool = False) -> str:
     print(">> Building src")
 
     print("  | Bundling css")
@@ -70,9 +70,11 @@ def build_template(content: str) -> str:
     content = re.sub(r'\\\{', r'\\\\{', content)
     content = re.sub(r'\\\}', r'\\\\}', content)
     content = re.sub(r'\\s', r'\\\\s', content)
-    content = content.replace("{", "{{").replace("}", "}}")
+
+    if skip_vars: return content
 
     print("  | Parsing variables")
+    content = content.replace("{", "{{").replace("}", "}}")
     content = parse_variable(content, "let items")
     content = parse_variable(content, "--bg")
     content = parse_variable(content, "--item-width")
@@ -86,9 +88,9 @@ def build_template(content: str) -> str:
 
     return content
 
-def file_to_template(file):
+def file_to_template(file, skip_vars: bool = False):
     src = open(file, "r").read()
-    return build_template(src)
+    return build_template(src, skip_vars)
 
 def template_to_file(tmp, file):
     open(file, "w").write(tmp)
@@ -100,3 +102,4 @@ def replace_temp(file, src):
 
 os.chdir("src")
 replace_temp("../main.py", file_to_template("index.html"))
+replace_temp("../server.py", file_to_template("server.html", True))

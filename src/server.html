@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKGallery Server</title>
+
+    <link rel="stylesheet" href="assets/styles/global.css">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="col center">
+    <div class="primary" style="width: min(97vw, 70ch);">
+        <p style="font-size: 1.5rem; margin-bottom: 3px;">MKGallery</p>
+        <hr>
+        <p style="opacity: .7;">Using MKGallery you'll be able to create, manage and share you own collections of all sorts of media.</p>
+
+        <br>
+
+        <div class="input__bar row" style="width: 100%;">
+            <input id="searchbar" autofocus type="text" class="primary" placeholder="Search for a name or create one" style="flex-grow: 1;">
+            <button class="primary" onclick="window.location.href = this.parentNode.querySelector('input').value">Go</button>
+            <script>
+                document.querySelector("#searchbar").value = crypto.randomUUID();
+            </script>
+        </div>
+        <br><br>
+        <p>Made by <a href="https://c4vxl.de">c4vxl</a></p>
+    </div>
+</body>
+</html>
