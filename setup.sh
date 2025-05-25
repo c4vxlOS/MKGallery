@@ -1,5 +1,5 @@
 # !/bin/bash
-sudo rm -R /usr/bin/mkgallery /usr/bin/mkgallery_src
+sudo rm -R /usr/bin/mkgallery /usr/bin/mkgallery-server /usr/bin/mkgallery_src
 sudo mkdir -p /usr/bin/mkgallery_src/
 
 python build.py
