@@ -1,3 +1,4 @@
+import threading
 from flask import Flask, request, jsonify
 import main as mkg
 import argparse
@@ -26,19 +27,25 @@ def set_items(id, val):
 def _prepare_gallery(id, **args):
     src = mkg.generate_html(get_items(id), id, **args)
     src = re.sub(r"(const init_item_metadata = \(\) => \{.*?};\s*\}\);\s*\};)", r"\1 init_item_metadata(); let __items_clone = items;", src)
-
-    src = re.sub(r"const warn_unsaved = \(\) => \{.*?\}", """const warn_unsaved = () => { 
+    r = '<button class="primary" onclick="export_page()" data-modal-close>Download gallery</button>'
+    src = src.replace(r, r + """\n<button class="primary" onclick="items = []; warn_unsaved(); reload();" data-modal-close>Remove all items</button>""")
+    src = re.sub(r"const warn_unsaved = \(\) => \{.*?\}", """const warn_unsaved = async () => { 
         let gn = location.pathname.split("/").reverse()[0];
-        __items_clone.forEach((item, id) => {
-            let match = items.find(x => x.src == item.src);
-            if (!match) fetch(`update/${gn}/?action=remove&id=${id}`);
-            if (match?.categories?.length != item.categories.length || match?.categories?.some((v, i) => v !== item.categories[i]) == true)
-                 fetch(`update/${gn}/?id=${id}&action=set_categories&categories=${JSON.stringify(match.categories)}`);
-        });
-        items.forEach((item, id) => {
-            let match = __items_clone.find(x => x.src == item.src);
-            if (!match) fetch(`update/${gn}/?action=add&src=${item.src}&categories=${JSON.stringify(item.categories)}`);
-        });
+        
+        if (items.length == 0) fetch(`update/${gn}/?action=removeall`);
+        else {
+            __items_clone.forEach((item, id) => {
+                let match = items.find(x => x.src == item.src);
+                if (!match) fetch(`update/${gn}/?action=remove&id=${id}`);
+                if (match?.categories?.length != item.categories.length || match?.categories?.some((v, i) => v !== item.categories[i]) == true)
+                     fetch(`update/${gn}/?id=${id}&action=set_categories&categories=${JSON.stringify(match.categories)}`);
+            });
+
+            items.forEach((item, id) => {
+                let match = __items_clone.find(x => x.src == item.src);
+                if (!match) fetch(`update/${gn}/?action=add&src=${item.src}&categories=${JSON.stringify(item.categories)}`);
+            });
+        }
         __items_clone = items;
     }""", src)
 
@@ -55,31 +62,34 @@ def create_flask_server():
     def _view_gallery(id):
         return _prepare_gallery(id, **DEFAULT_COLORS)
     
+    lock = threading.Lock()
+
     @app.route("/update/<id>/", methods=["GET"])
     def _update(id):
-        data = get_items(id)
-        
         action = request.args.get("action")
         if not action:
-            return jsonify({ "success": False })
-        
+            return jsonify({"success": False})
 
-        if action == "add":
-            data.append({ "src": request.args.get("src"), "categories": json.loads(request.args.get("categories")) })
-        else:
-            obj = int(request.args.get("id", -1))
-            if obj == -1:
-                return jsonify({ "success": False })
+        with lock:
+            data = get_items(id)
 
-            if action == "remove":
-                data.pop(obj)
-        
-            elif action == "set_categories":
-                data[obj]["categories"] = json.loads(request.args.get("categories"))
-        
-        set_items(id, data)
+            if action == "add":
+                data.append({"src": request.args.get("src"), "categories": json.loads(request.args.get("categories"))})
+            elif action == "removeall":
+                data = []
+            else:
+                obj = int(request.args.get("id", -1))
+                if obj == -1:
+                    return jsonify({"success": False})
 
-        return jsonify({ "success": True })
+                if action == "remove":
+                    data.pop(obj)
+                elif action == "set_categories":
+                    data[obj]["categories"] = json.loads(request.args.get("categories"))
+
+            set_items(id, data)
+
+        return jsonify({"success": True})
 
     return app
 
