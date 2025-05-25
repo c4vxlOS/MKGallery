@@ -57,10 +57,6 @@ def _prepare_gallery(id, **args):
             }
         });
                  
-        console.log(added)
-                 console.log(removed)
-                 console.log(categoriesChanged)
-                 
         let data = new FormData();
         data.append("added", JSON.stringify(added));
         data.append("removed", JSON.stringify(removed));
