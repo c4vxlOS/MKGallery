@@ -29,6 +29,7 @@ def _prepare_gallery(id, **args):
     src = re.sub(r"(const init_item_metadata = \(\) => \{.*?};\s*\}\);\s*\};)", r"\1 init_item_metadata(); let __items_clone = items;", src)
     r = '<button class="primary" onclick="export_page()" data-modal-close>Download gallery</button>'
     src = src.replace(r, r + """\n<button class="primary" onclick="items = []; warn_unsaved(); reload();" data-modal-close>Remove all items</button>""")
+    src = re.sub(r'<button\s+class="primary"[^>]*>Export empty gallery</button>', "", src)
     src = re.sub(r"const warn_unsaved = \(\) => \{.*?\}", """const warn_unsaved = async () => { 
         let gn = location.pathname.split("/").reverse()[0];
         
