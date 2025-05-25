@@ -61,7 +61,7 @@ def _prepare_gallery(id, **args):
         data.append("added", JSON.stringify(added));
         data.append("removed", JSON.stringify(removed));
         data.append("categoriesChanged", JSON.stringify(categoriesChanged));
-        fetch(window.location.href.replace(gn, `update/${gn}`), { method: "POST", body: data });
+        fetch(window.location.href.replace(gn, `update/${gn}/`), { method: "POST", body: data });
         reload();
     }""", src)
 
