@@ -80,6 +80,11 @@ def create_flask_server():
     
     lock = threading.Lock()
 
+    @app.route("/items/<id>/", methods=["GET"])
+    def _list(id):
+        data = get_items(id)
+        return data
+
     @app.route("/update/<id>/", methods=["POST"])
     def _update(id):
         def get(name):
@@ -99,7 +104,7 @@ def create_flask_server():
                 data = [ d for i, d in enumerate(data) if i not in removed ]
 
                 for c in categoriesChanged:
-                        data[c[0]]["categories"] = c[1]
+                    data[c[0]]["categories"] = c[1]
 
                 set_items(id, data)
             return jsonify({ "success": True })
