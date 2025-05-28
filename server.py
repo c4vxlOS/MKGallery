@@ -121,6 +121,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Host a server synced version of mkgallery.")
     parser.add_argument("--port", "-po", type=int, help="Set the port the server should be running on. (Default: 4420)", default=4420)
     parser.add_argument("--host", "-ht", type=str, help="Set the host the server should be running on. (Default: 127.0.0.1)", default="127.0.0.1")
+    parser.add_argument("--db-path", "-db", type=str, help="Set the path to the db directory. (Default: ./db)", default="./db")
     parser.add_argument("--font", "-f", type=str, help="Set the default font.")
     parser.add_argument("--accent", "-a", type=str, help="Set the default accent color.")
     parser.add_argument("--background", "-bg", type=str, help="Set the default background color.")
@@ -146,5 +147,7 @@ if __name__ == "__main__":
         primary = default(args.primary, preset["primary"]),
         font = default(args.font, preset["font"])
     )
+
+    DB_PATH = args.db_path
 
     start_flask_server(args.port, args.host)
