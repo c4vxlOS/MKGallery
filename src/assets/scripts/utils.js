@@ -42,7 +42,8 @@ const export_all_media = async () => {
 const items_to_enc = (src = true) => {
     return items.map(item => {
         let c = item.categories.filter(c => c != item.type).join(";");
-        return `${c ? "[" + c + "] " : ""}${src ? item.src : item.origin}`;
+        let u = src ? item.src : item.origin;
+        return c ? `[${c}] ${u}` : u;
     }).join("\n");
 }
 
