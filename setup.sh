@@ -2,21 +2,21 @@
 sudo rm -R /usr/bin/mkgallery /usr/bin/mkgallery-server /usr/bin/mkgallery_src
 sudo mkdir -p /usr/bin/mkgallery_src/
 
-python build.py
+python3 build.py
 
-pip install requests flask --break-system-packages
+python3 -m pip install requests flask --break-system-packages
 
 sudo cp -R main.py /usr/bin/mkgallery_src/
 sudo cp -R server.py /usr/bin/mkgallery_src/
 
 sudo tee /usr/bin/mkgallery_src/mkgallery.sh <<EOF
 # !/bin/bash
-python /usr/bin/mkgallery_src/main.py "\$@"
+python3 /usr/bin/mkgallery_src/main.py "\$@"
 EOF
 
 sudo tee /usr/bin/mkgallery_src/mkgallery-server.sh <<EOF
 # !/bin/bash
-python /usr/bin/mkgallery_src/server.py "\$@"
+python3 /usr/bin/mkgallery_src/server.py "\$@"
 EOF
 
 sudo chmod -R 777 /usr/bin/mkgallery_src/
