@@ -149,6 +149,9 @@ const reload_categories = () => {
             .filter(r => r.textContent == x)[0]
         ).forEach(x => x?.click());
     canReload = true;
+
+    // Update category suggestions
+    document.querySelector("#categories__autocomplete").innerHTML = categories.map(x => `<option value="${x}"></option>`).join("");
 }
 
 let timeouts = [];
