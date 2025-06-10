@@ -181,7 +181,7 @@ const reload = async () => {
     // Load items
     timeouts.forEach(clearTimeout);
     timeouts = [];
-    validItems.forEach((item, i) => timeouts.push(setTimeout(() => add_item_to_container(item), item.src.startsWith("data:") ? i * 100 : 0)));
+    validItems.forEach((item, i) => timeouts.push(setTimeout(() => add_item_to_container(item), item.src.startsWith("data:") ? i * 100 : 50)));
 }
 
 reload();
