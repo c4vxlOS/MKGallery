@@ -74,7 +74,7 @@
         <div class="modal__content col center primary">
             <p>Create Category</p>
             <div class="input__bar row">
-                <input type="text" class="primary" list="categories__autocomplete">
+                <input type="text" class="primary" list="categories__autocomplete" onkeypress="event.keyCode == 13 ? this.parentNode.querySelector('button')?.click() : null">
                 <datalist id="categories__autocomplete"></datalist>
                 <button class="primary" data-modal-close onclick="add_category_to_current(this.parentNode.querySelector('input'))">Add</button>
             </div>
