@@ -177,9 +177,9 @@ const reload = async () => {
     let domIds = [...container.querySelectorAll(".item")].map(x => Number(x.dataset.id));
     let locIds = validItems.map(x => x.id);
     let didChange = domIds.length !== locIds.length || domIds.some((v, i) => v !== locIds[i]);
-    if (validItems.length == 0) container.innerHTML = "<p>No items found. <b>Check your filters!</b></p>";
     if (!didChange) return;
     container.innerHTML = "";
+    if (validItems.length == 0) container.innerHTML = "<p>No items found. <b>Check your filters!</b></p>";
 
     // Load items
     timeouts.forEach(clearTimeout);
