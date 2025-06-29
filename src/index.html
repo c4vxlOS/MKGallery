@@ -101,7 +101,7 @@
             <p>Export</p>
             
             <div class="button__panel col">
-                <button class="primary" onclick="pb64(); export_page()" data-modal-close>Export as offline mode</button>
+                <button class="primary" onclick="pb64().then(export_page)" data-modal-close>Export as offline mode</button>
                 <button class="primary" onclick="export_all_media()" data-modal-close>Export media</button>
                 <button class="primary" onclick="download(items_to_enc(), 'sources.txt')" data-modal-close>Export sources</button>
                 <button class="primary" onclick="download(items_to_enc(false), 'origins.txt')" data-modal-close>Export origins</button>
