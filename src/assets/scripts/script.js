@@ -34,6 +34,15 @@ const init_item_metadata = () => {
             "categories": item.categories || [ type.replace("img", "image") ], "type": type, "html": html
         };
     });
+
+    srces = [];
+    items = [...items].filter(item => {
+        if (srces.includes(item.src))
+            return false;
+
+        srces.push(item.src);
+        return true;
+    });
 }
 
 const export_page = (title = document.title) => {
