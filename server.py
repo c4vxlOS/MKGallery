@@ -26,7 +26,7 @@ def set_items(id, val):
 
 def _prepare_gallery(id, **args):
     src = mkg.generate_html(get_items(id), id, **args)
-    src = re.sub(r"(const init_item_metadata = \(\) => \{.*?};\s*\}\);\s*\};)", r"\1 init_item_metadata(); let __items_clone = items;", src)
+    src = re.sub(r"(const\s+init_item_metadata\s*=\s*\(\)\s*=>\s*\{(?:.|\n)*?)(?=const\s+export_page)", r"\1 init_item_metadata(); let __items_clone = items;", src)
     r = '<button class="primary" onclick="export_page()" data-modal-close>Download gallery</button>'
     src = src.replace(r, r + """\n<button class="primary" onclick="items = []; warn_unsaved(); reload();" data-modal-close>Remove all items</button>""")
     src = re.sub(r'<button\s+class="primary"[^>]*>Export empty gallery</button>', "", src)
